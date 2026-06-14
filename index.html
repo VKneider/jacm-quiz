@@ -1,5 +1,6 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Nunito+Sans:wght@400;600;700&display=swap');
 
@@ -178,7 +179,9 @@
     background: #ffffff14 center/cover no-repeat; border: 1px solid #ffffff1f;
     display: grid; place-items: center; color: #f5efe659; font-size: 12px;
     font-weight: 700; letter-spacing: .04em; text-align: center; padding: 10px;
+    overflow: hidden;
   }
+  .result-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
   .ledein {
     font-size: 14px; color: var(--hueso-tenue); letter-spacing: .04em; margin: 20px 0 6px;
@@ -199,6 +202,30 @@
 
   .actions { display: flex; flex-direction: column; gap: 11px; align-items: center; }
   .actions .btn { width: 100%; max-width: 320px; }
+
+  /* zona que se convierte en imagen al compartir */
+  .capture {
+    padding: 22px 18px 18px;
+    border-radius: 20px;
+    background: radial-gradient(circle at 50% 12%, #741414, #4d0808);
+    border: 1px solid #ffffff14;
+    margin-bottom: 18px;
+  }
+  .cap-lema {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 600;
+    color: var(--oro); font-size: 16px; margin-top: 14px;
+  }
+  .cap-tag {
+    font-size: 12px; letter-spacing: .18em; text-transform: uppercase;
+    color: #f5efe673; font-weight: 700; margin-top: 6px;
+  }
+
+  .btn-wa {
+    background: #1faf54; color: #ffffff; font-size: 16px; padding: 14px 28px;
+    box-shadow: 0 8px 22px #1faf543d;
+  }
+  .btn-wa:hover { background: #1bbf5b; transform: translateY(-1px); }
+  .btn:disabled { opacity: .6; cursor: default; transform: none; }
 
   .coord { margin-top: 24px; font-size: 13px; color: #f5efe680; line-height: 1.5; }
   .coord b { color: var(--hueso-tenue); }
@@ -227,24 +254,24 @@ const CONFIG = {
   // Audio de fondo (.mp3/.ogg). Deja "" para ocultar el botón de música.
   // (Spotify NO sirve para música de fondo; debe ser un archivo de audio alojado.)
   audio: "",
- 
+
   // Logo de Acción Católica (aparece en el inicio). Deja "" para usar el escudo dibujado.
   logoAC: "https://raw.githubusercontent.com/VKneider/jac-birthday-card/master/logo%20ac.png",
- 
+
   // 3 fotos del grupo para el inicio (cuadradas se ven mejor).
   fotosInicio: [
     "https://raw.githubusercontent.com/VKneider/jacm-quiz/main/images/group1.jpg",
     "https://raw.githubusercontent.com/VKneider/jacm-quiz/main/images/group2.jpg",
     "https://raw.githubusercontent.com/VKneider/jacm-quiz/main/images/group3.jpg"
   ],
- 
+
   // 1 foto por ministerio para la pantalla de resultado.
   // (Falta subir musica.jpg; al subirla aparecerá automáticamente.)
   fotosMinisterio: {
     promocion: "https://raw.githubusercontent.com/VKneider/jacm-quiz/main/images/ministerios/promocion.jpg",
     formacion: "https://raw.githubusercontent.com/VKneider/jacm-quiz/main/images/ministerios/formacion.jpg",
     liturgia:  "https://raw.githubusercontent.com/VKneider/jacm-quiz/main/images/ministerios/liturgia.jpg",
-    musica:    "https://raw.githubusercontent.com/VKneider/jacm-quiz/main/images/ministerios/musica.png",
+    musica:    "https://raw.githubusercontent.com/VKneider/jacm-quiz/main/images/ministerios/musica.jpg",
     finanzas:  "https://raw.githubusercontent.com/VKneider/jacm-quiz/main/images/ministerios/finanzas.jpg"
   }
 };
@@ -548,22 +575,27 @@ function renderResult() {
   const m2 = MINISTERIOS[KEYMAP[second]];
   const foto = CONFIG.fotosMinisterio[key];
   const fotoBlock = foto
-    ? `<div class="result-photo" style="background-image:url('${foto}')"></div>`
+    ? `<div class="result-photo"><img src="${foto}" alt="${m.nombre}" crossorigin="anonymous" /></div>`
     : `<div class="result-photo">FOTO DE ${m.nombre.toUpperCase()}</div>`;
 
   app.innerHTML = `
     <div class="card result">
-      <div class="sello">
-        <svg viewBox="0 0 24 24" fill="#E8C04B"><path d="${m.icon}"/></svg>
+      <div id="capture" class="capture">
+        <div class="sello">
+          <svg viewBox="0 0 24 24" fill="#E8C04B"><path d="${m.icon}"/></svg>
+        </div>
+        <p class="ledein">TU MINISTERIO ES</p>
+        <h2>${m.nombre}</h2>
+        ${fotoBlock}
+        <p class="mision">${m.mision}</p>
+        <div class="porque">${m.porque}</div>
+        <p class="segundo">También encajarías en <b>${m2.nombre}</b>.</p>
+        <p class="cap-lema">"Libres para liberar"</p>
+        <p class="cap-tag">jacm.vkneider.dev</p>
       </div>
-      <p class="ledein">TU MINISTERIO ES</p>
-      <h2>${m.nombre}</h2>
-      ${fotoBlock}
-      <p class="mision">${m.mision}</p>
-      <div class="porque">${m.porque}</div>
-      <p class="segundo">También encajarías en <b>${m2.nombre}</b>.</p>
       <div class="actions">
-        <button class="btn btn-primary" id="share">Compartir resultado</button>
+        <button class="btn btn-primary" id="download">📸 Descargar imagen</button>
+        <button class="btn btn-wa" id="whatsapp">Compartir por WhatsApp</button>
         <button class="btn btn-ghost" id="again">Hacer el test otra vez</button>
       </div>
       <p class="coord">Esto es solo una orientación — el último paso es el discernimiento personal y conversarlo con la coordinación.<br>
@@ -571,20 +603,64 @@ function renderResult() {
     </div>`;
 
   document.getElementById('again').onclick = reset;
-  document.getElementById('share').onclick = () => share(m);
+  document.getElementById('download').onclick = () => downloadImage(m);
+  document.getElementById('whatsapp').onclick = () => shareWhatsApp(m);
 }
 
-function share(m) {
-  const text = `Hice el test de JACM y mi ministerio es ${m.nombre}. "Libres para liberar". Descubre el tuyo:`;
-  const url = location.href;
-  if (navigator.share) {
-    navigator.share({ title: '¿Cuál es tu ministerio? · JACM', text, url }).catch(() => {});
-  } else {
-    navigator.clipboard.writeText(`${text} ${url}`).then(showToast).catch(showToast);
+// Genera la imagen del resultado con html2canvas.
+async function captureResult() {
+  const node = document.getElementById('capture');
+  if (!node || typeof html2canvas !== 'function') return null;
+  const canvas = await html2canvas(node, {
+    backgroundColor: '#5C0A0A',
+    scale: 2,                 // mayor resolución para compartir
+    useCORS: true             // permite incluir las fotos del repo
+  });
+  return canvas;
+}
+
+// Botón principal: en móvil intenta compartir la imagen (WhatsApp/Instagram con foto);
+// si no se puede, la descarga.
+async function downloadImage(m) {
+  const btn = document.getElementById('download');
+  const prev = btn.textContent;
+  btn.textContent = 'Generando…';
+  btn.disabled = true;
+  try {
+    const canvas = await captureResult();
+    if (!canvas) { showToast('No se pudo generar la imagen'); return; }
+
+    const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+    const file = new File([blob], `mi-ministerio-${m.nombre.toLowerCase()}.png`, { type: 'image/png' });
+    const text = `Mi ministerio en JACM es ${m.nombre}. "Libres para liberar". Descubre el tuyo:`;
+
+    // Compartir nativo con imagen (móvil) — el SO ofrece WhatsApp, Instagram, etc.
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({ files: [file], text, url: location.href });
+    } else {
+      // Escritorio o sin soporte: descarga directa
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = file.name;
+      a.click();
+      showToast('Imagen descargada');
+    }
+  } catch (e) {
+    showToast('No se pudo compartir');
+  } finally {
+    btn.textContent = prev;
+    btn.disabled = false;
   }
 }
-function showToast() {
+
+// Respaldo universal: abre WhatsApp con texto + enlace (WhatsApp no acepta imágenes por URL).
+function shareWhatsApp(m) {
+  const text = `Hice el test de JACM y mi ministerio es ${m.nombre}. "Libres para liberar". Descubre el tuyo: ${location.href}`;
+  window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+}
+function showToast(msg) {
   const t = document.getElementById('toast');
+  if (msg) t.textContent = msg;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 1900);
 }
