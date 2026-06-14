@@ -597,7 +597,6 @@ function renderResult() {
       </div>
       <div class="actions">
         <button class="btn btn-primary" id="download">📸 Descargar imagen</button>
-        <button class="btn btn-wa" id="whatsapp">Compartir por WhatsApp</button>
         <button class="btn btn-ghost" id="again">Hacer el test otra vez</button>
       </div>
       <p class="coord">Esto es solo una orientación — el último paso es el discernimiento personal y conversarlo con la coordinación.<br>
@@ -606,7 +605,6 @@ function renderResult() {
 
   document.getElementById('again').onclick = reset;
   document.getElementById('download').onclick = () => downloadImage(m);
-  document.getElementById('whatsapp').onclick = () => shareWhatsApp(m);
 }
 
 // Genera la imagen del resultado con html2canvas.
