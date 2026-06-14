@@ -1,0 +1,610 @@
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Nunito+Sans:wght@400;600;700&display=swap');
+
+  :root {
+    --vino: #5C0A0A;
+    --vino-medio: #771515;
+    --vino-card: #6a1111;
+    --vino-oscuro: #3a0606;
+    --oro: #E8C04B;
+    --oro-suave: #f0d488;
+    --hueso: #F5EFE6;
+    --hueso-tenue: #f5efe6b3;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    background:
+      radial-gradient(1200px 800px at 50% -10%, #6e1010 0%, transparent 60%),
+      var(--vino);
+    color: var(--hueso);
+    font-family: 'Nunito Sans', system-ui, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 18px;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(circle at 50% 42%, #ffffff0d 0 2px, transparent 3px);
+    background-size: 26px 26px;
+    opacity: .35;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .stage {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 560px;
+    text-align: center;
+  }
+
+  .eyebrow {
+    font-size: 12px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--oro);
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  h1, h2, .display {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 900;
+    line-height: 1.04;
+    letter-spacing: -.01em;
+  }
+
+  .chain { display: flex; gap: 6px; align-items: center; margin-bottom: 26px; }
+  .link {
+    flex: 1; height: 8px; border-radius: 20px; background: #ffffff1f;
+    transition: background .45s ease, box-shadow .45s ease;
+  }
+  .link.broken {
+    background: linear-gradient(90deg, var(--oro), var(--oro-suave));
+    box-shadow: 0 0 12px #e8c04b6b;
+  }
+
+  .card { animation: rise .5s cubic-bezier(.2,.7,.2,1) both; }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .crest { width: 72px; height: 72px; margin: 0 auto 18px; display: block; }
+  .crest-img {
+    width: 84px; height: 84px; margin: 0 auto 18px; display: block;
+    object-fit: contain;
+  }
+  .intro h1 { font-size: clamp(34px, 9vw, 52px); margin-bottom: 6px; }
+  .intro .sub {
+    font-size: 17px; color: var(--hueso-tenue);
+    max-width: 38ch; margin: 16px auto 4px; line-height: 1.5;
+  }
+  .lema {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 600;
+    color: var(--oro); font-size: 18px; margin: 20px 0 26px;
+  }
+
+  .photo-strip {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 4px 0 24px;
+  }
+  .photo-strip .ph {
+    aspect-ratio: 1 / 1; border-radius: 14px;
+    background: #ffffff14 center/cover no-repeat; border: 1px solid #ffffff1a;
+    display: grid; place-items: center;
+    color: #f5efe659; font-size: 11px; font-weight: 700;
+    letter-spacing: .04em; text-align: center; padding: 6px;
+  }
+
+  .btn {
+    appearance: none; border: none; cursor: pointer; font-family: inherit;
+    font-weight: 700; border-radius: 14px;
+    transition: transform .12s ease, box-shadow .2s ease, background .2s ease;
+  }
+  .btn:active { transform: scale(.98); }
+  .btn-primary {
+    background: var(--oro); color: var(--vino-oscuro); font-size: 17px;
+    padding: 15px 30px; box-shadow: 0 8px 22px #e8c04b3d; letter-spacing: .01em;
+  }
+  .btn-primary:hover { box-shadow: 0 10px 28px #e8c04b5c; transform: translateY(-1px); }
+  .btn-ghost {
+    background: transparent; color: var(--hueso-tenue);
+    border: 1px solid #ffffff33; padding: 12px 22px; font-size: 14px; font-weight: 600;
+  }
+  .btn-ghost:hover { color: var(--hueso); border-color: #ffffff66; }
+
+  .music {
+    position: fixed; top: 14px; right: 14px; z-index: 4;
+    width: 42px; height: 42px; border-radius: 50%;
+    background: #ffffff14; border: 1px solid #ffffff2e;
+    display: grid; place-items: center; cursor: pointer;
+    color: var(--oro); transition: background .2s ease;
+  }
+  .music:hover { background: #ffffff24; }
+  .music svg { width: 20px; height: 20px; }
+  .music[hidden] { display: none; }
+
+  .qcount {
+    font-size: 13px; color: var(--oro); font-weight: 700;
+    letter-spacing: .04em; margin-bottom: 10px;
+  }
+  .question { font-size: clamp(22px, 5.6vw, 28px); margin-bottom: 24px; line-height: 1.18; }
+  .options { display: flex; flex-direction: column; gap: 11px; }
+  .opt {
+    text-align: left; background: var(--vino-card); color: var(--hueso);
+    border: 1px solid #ffffff14; border-radius: 16px; padding: 16px 18px;
+    font-size: 16px; font-weight: 600; line-height: 1.35; cursor: pointer;
+    transition: border-color .15s ease, background .15s ease, transform .12s ease; width: 100%;
+  }
+  .opt:hover { border-color: var(--oro); background: #7a1818; }
+  .opt:active { transform: scale(.99); }
+  .opt:focus-visible { outline: 3px solid var(--oro); outline-offset: 2px; }
+
+  .back {
+    margin-top: 20px; background: none; border: none; color: var(--hueso-tenue);
+    font-family: inherit; font-size: 14px; cursor: pointer; padding: 6px 2px;
+  }
+  .back:hover { color: var(--oro); }
+  .back[hidden] { display: none; }
+
+  .sello {
+    width: 116px; height: 116px; margin: 0 auto 4px; display: grid; place-items: center;
+    border-radius: 50%; border: 2px solid var(--oro);
+    background: radial-gradient(circle at 50% 35%, #8a1c1c, #4d0808);
+    box-shadow: 0 0 0 6px #e8c04b1f, 0 14px 40px #00000059;
+    animation: stamp .6s cubic-bezier(.2,1.3,.4,1) both; overflow: hidden;
+  }
+  @keyframes stamp {
+    0% { opacity: 0; transform: scale(1.4) rotate(-8deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0); }
+  }
+  .sello svg { width: 60px; height: 60px; }
+  .sello img { width: 100%; height: 100%; object-fit: cover; }
+
+  .result-photo {
+    width: 100%; aspect-ratio: 16 / 10; border-radius: 18px; margin: 18px 0 4px;
+    background: #ffffff14 center/cover no-repeat; border: 1px solid #ffffff1f;
+    display: grid; place-items: center; color: #f5efe659; font-size: 12px;
+    font-weight: 700; letter-spacing: .04em; text-align: center; padding: 10px;
+  }
+
+  .ledein {
+    font-size: 14px; color: var(--hueso-tenue); letter-spacing: .04em; margin: 20px 0 6px;
+  }
+  .result h2 { font-size: clamp(30px, 8vw, 44px); color: var(--oro); margin-bottom: 14px; }
+  .mision {
+    font-size: 17px; line-height: 1.55; color: var(--hueso);
+    max-width: 40ch; margin: 0 auto 20px;
+  }
+  .porque {
+    background: #ffffff0f; border-left: 3px solid var(--oro); border-radius: 10px;
+    text-align: left; padding: 16px 18px; margin: 0 auto 16px;
+    font-size: 15px; line-height: 1.5;
+  }
+  .porque b { color: var(--oro-suave); }
+  .segundo { font-size: 14px; color: var(--hueso-tenue); margin-bottom: 24px; }
+  .segundo b { color: var(--hueso); }
+
+  .actions { display: flex; flex-direction: column; gap: 11px; align-items: center; }
+  .actions .btn { width: 100%; max-width: 320px; }
+
+  .coord { margin-top: 24px; font-size: 13px; color: #f5efe680; line-height: 1.5; }
+  .coord b { color: var(--hueso-tenue); }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 26px;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--oro); color: var(--vino-oscuro); font-weight: 700; font-size: 14px;
+    padding: 12px 20px; border-radius: 30px; box-shadow: 0 10px 30px #00000066;
+    opacity: 0; pointer-events: none;
+    transition: opacity .25s ease, transform .25s ease; z-index: 5;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before { animation: none !important; transition: none !important; }
+  }
+</style>
+
+<!-- =============================================================== -->
+<!--  CONFIGURACIÓN — PEGA AQUÍ TUS FOTOS Y TU MÚSICA                 -->
+<!--  Deja "" para mostrar el placeholder. Pega una URL para usarla.  -->
+<!-- =============================================================== -->
+<script>
+const CONFIG = {
+  // Audio de fondo (.mp3/.ogg). Deja "" para ocultar el botón de música.
+  audio: "",
+
+  // Logo de Acción Católica (aparece en el inicio). Deja "" para usar el escudo dibujado.
+  logoAC: "https://raw.githubusercontent.com/VKneider/jac-birthday-card/master/logo%20ac.png",
+
+  // 3 fotos del grupo para el inicio (cuadradas se ven mejor).
+  fotosInicio: ["", "", ""],
+
+  // 1 foto por ministerio para la pantalla de resultado.
+  fotosMinisterio: {
+    promocion: "",
+    formacion: "",
+    liturgia:  "",
+    musica:    "",
+    finanzas:  ""
+  }
+};
+</script>
+
+<div class="music" id="musicBtn" hidden></div>
+
+<div class="stage">
+  <div class="chain" id="chain" hidden></div>
+  <div id="app"></div>
+</div>
+<div class="toast" id="toast">Enlace copiado</div>
+
+<script>
+const MINISTERIOS = {
+  promocion: {
+    nombre: "Promoción",
+    mision: "Das a conocer al grupo y haces sentir bienvenido a quien llega. Comunicas, acoges y atraes con creatividad.",
+    porque: "Tienes energía de <b>embajador</b>: conectas con la gente, te mueves bien en redes y disfrutas que nadie se sienta de fuera.",
+    coord: "Andrea Leal",
+    icon: 'M12 2 3 7v6c0 5 3.8 8.3 9 9 5.2-.7 9-4 9-9V7l-9-5Zm0 6.2 3 1.8-3 1.8-3-1.8 3-1.8Z'
+  },
+  formacion: {
+    nombre: "Formación",
+    mision: "Ayudas a otros a crecer en la fe y el conocimiento. Preparas, enseñas y acompañas el camino formativo del grupo.",
+    porque: "Tienes alma de <b>maestro</b>: te gusta profundizar, explicar bien y que la gente se vaya con algo aprendido.",
+    coord: "Hans Meyer",
+    icon: 'M4 5h11a3 3 0 0 1 3 3v11a4 4 0 0 0-3-1.2H4V5Zm16 0h-1a3 3 0 0 0-1 .2V17a4 4 0 0 1 2-.5V5Z'
+  },
+  liturgia: {
+    nombre: "Liturgia",
+    mision: "Cuidas que cada celebración sea un verdadero encuentro con Cristo: con orden, belleza y reverencia.",
+    porque: "Eres <b>contemplativo y detallista</b>: encuentras a Dios en el silencio y en lo bien hecho, y sirves sin necesidad de aplausos.",
+    coord: "María Simoes",
+    icon: 'M11 2h2v6h6v2h-6v12h-2V10H5V8h6V2Z'
+  },
+  musica: {
+    nombre: "Música",
+    mision: "Pones voz y melodía a la oración del grupo. Tu servicio convierte el canto en alabanza y en camino hacia Dios.",
+    porque: "Vives la fe a través de la <b>belleza y la emoción</b>, eres constante con el ensayo y disfrutas crear en equipo.",
+    coord: "Ángel Atencio",
+    icon: 'M9 3h10v3H12v10.5A3.5 3.5 0 1 1 9 13V3Zm-1 13.5A1.5 1.5 0 1 0 9.5 18 1.5 1.5 0 0 0 8 16.5Z'
+  },
+  finanzas: {
+    nombre: "Finanzas",
+    mision: "Cuidas que el grupo sea sostenible. Administras con transparencia y haces posible que cada proyecto suceda.",
+    porque: "Eres <b>organizado e íntegro</b>: te gusta que las cuentas cuadren, planificas bien y la gente confía en ti.",
+    coord: "Gabriela Ferrer",
+    icon: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 15.2v1.3h-2v-1.3c-1.5-.3-2.6-1.2-2.7-2.7h2c.1.7.6 1.2 1.7 1.2 1 0 1.6-.4 1.6-1.1 0-.6-.4-1-1.9-1.3-1.9-.4-3-1.1-3-2.7 0-1.3 1-2.2 2.3-2.5V6.5h2v1.3c1.4.3 2.3 1.2 2.4 2.5h-2c-.1-.6-.5-1.1-1.4-1.1-.9 0-1.4.4-1.4 1 0 .6.5.9 1.9 1.2 2 .4 3 1.2 3 2.8 0 1.4-1 2.3-2.4 2.6Z'
+  }
+};
+
+// keys: p=promocion f=formacion l=liturgia m=musica n=finanzas
+const QUESTIONS = [
+  { q: "Llegas por primera vez a una actividad del grupo. ¿Qué haces?", opts: [
+    { t: "Me presento con todo el mundo y rompo el hielo", s: { p: 2 } },
+    { t: "Observo en silencio y me acerco con calma a la oración", s: { l: 2 } },
+    { t: "Pregunto cómo funciona todo y dónde puedo ayudar", s: { n: 1, f: 1 } },
+    { t: "Termino tarareando los cantos que escuché", s: { m: 2 } },
+  ]},
+  { q: "Cuando preparan algo en equipo, la parte que te toca naturalmente es…", opts: [
+    { t: "Difundirlo e invitar a la gente", s: { p: 2 } },
+    { t: "Preparar el contenido y explicarlo", s: { f: 2 } },
+    { t: "Cuidar el ambiente, lo sagrado y los detalles", s: { l: 2 } },
+    { t: "Llevar los números, los recursos y que cuadre", s: { n: 2 } },
+  ]},
+  { q: "¿Cómo te encuentras más con Dios?", opts: [
+    { t: "En el silencio frente al Santísimo", s: { l: 2 } },
+    { t: "Cantando y alabando", s: { m: 2 } },
+    { t: "Estudiando y entendiendo más la fe", s: { f: 2 } },
+    { t: "Sirviendo en lo concreto y práctico", s: { n: 1, p: 1 } },
+  ]},
+  { q: "¿Qué te describe mejor?", opts: [
+    { t: "Creativo y sociable", s: { p: 2 } },
+    { t: "Sensible y expresivo", s: { m: 2 } },
+    { t: "Reflexivo y profundo", s: { f: 2 } },
+    { t: "Metódico y confiable", s: { n: 2 } },
+  ]},
+  { q: "Te dan a elegir una tarea para el próximo evento:", opts: [
+    { t: "Diseñar la invitación y moverla en redes", s: { p: 2 } },
+    { t: "Armar la lista de cantos y ensayar", s: { m: 2 } },
+    { t: "Preparar la decoración y las lecturas", s: { l: 2 } },
+    { t: "Llevar el presupuesto y la recaudación", s: { n: 2 } },
+  ]},
+  { q: "¿Qué es lo que más disfrutas?", opts: [
+    { t: "Ver a alguien crecer en su fe", s: { f: 2 } },
+    { t: "Que una celebración quede preciosa", s: { l: 1, m: 1 } },
+    { t: "Conocer y conectar con gente nueva", s: { p: 2 } },
+    { t: "Que un plan salga tal como se pensó", s: { n: 2 } },
+  ]},
+  { q: "Algo que te frustra de un equipo:", opts: [
+    { t: "Que falte orden y todo sea improvisado", s: { n: 2 } },
+    { t: "Que la gente nueva quede ignorada", s: { p: 2 } },
+    { t: "Que se hagan las cosas sin profundidad", s: { f: 2 } },
+    { t: "Que no se cuide el momento de oración", s: { l: 2 } },
+  ]},
+  { q: "Un don que sientes que tienes para el grupo:", opts: [
+    { t: "La palabra: comunicar y enseñar", s: { f: 1, p: 1 } },
+    { t: "La voz o un instrumento", s: { m: 2 } },
+    { t: "La constancia y la responsabilidad", s: { n: 2 } },
+    { t: "El recogimiento y el sentido de lo sagrado", s: { l: 2 } },
+  ]},
+  { q: "Sábado libre y el grupo necesita ayuda. Te apuntas a…", opts: [
+    { t: "Grabar y editar contenido para redes", s: { p: 2 } },
+    { t: "Un ensayo extra para afinar los cantos", s: { m: 2 } },
+    { t: "Preparar el tema del próximo encuentro", s: { f: 2 } },
+    { t: "Ordenar cuentas y planear una recaudación", s: { n: 2 } },
+  ]},
+  { q: "En una misa del grupo, ¿dónde te sientes más tú?", opts: [
+    { t: "Proclamando o preparando todo el altar", s: { l: 2 } },
+    { t: "En el coro, sosteniendo el canto", s: { m: 2 } },
+    { t: "Recibiendo en la puerta a quien llega", s: { p: 2 } },
+    { t: "Coordinando que nada falte detrás", s: { n: 1, l: 1 } },
+  ]},
+  { q: "Tu manera de servir se parece más a…", opts: [
+    { t: "Encender al grupo y darlo a conocer", s: { p: 2 } },
+    { t: "Formar y hacer crecer a los demás", s: { f: 2 } },
+    { t: "Sostener en silencio lo que hace falta", s: { l: 1, n: 1 } },
+    { t: "Poner alma y arte en cada momento", s: { m: 2 } },
+  ]},
+  { q: "Para cerrar: ¿qué frase va más contigo?", opts: [
+    { t: "\"Que todos sepan que aquí caben\"", s: { p: 2 } },
+    { t: "\"Que entiendan y amen lo que creen\"", s: { f: 2 } },
+    { t: "\"Que el encuentro con Dios sea digno\"", s: { l: 2 } },
+    { t: "\"Que el grupo se sostenga y dure\"", s: { n: 2 } },
+  ]},
+  { q: "Y lo último: si tuvieras que elegir una palabra…", opts: [
+    { t: "Acoger", s: { p: 2 } },
+    { t: "Enseñar", s: { f: 2 } },
+    { t: "Adorar", s: { l: 2 } },
+    { t: "Cantar", s: { m: 2 } },
+  ]},
+];
+
+let step = -1;
+let scores = { p:0, f:0, l:0, m:0, n:0 };
+let answers = [];
+let resumeAvailable = false;
+const app = document.getElementById('app');
+const chainEl = document.getElementById('chain');
+const KEYMAP = { p:'promocion', f:'formacion', l:'liturgia', m:'musica', n:'finanzas' };
+const STORE_KEY = 'jacm_test_v1';
+
+// ---- persistencia (localStorage con fallback seguro) ----
+// Nota: localStorage está bloqueado dentro del visor de artifacts de Claude,
+// pero funciona normalmente al subir el archivo a tu hosting.
+function saveProgress() {
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify({ step, scores, answers }));
+  } catch (e) { /* almacenamiento no disponible: seguimos sin guardar */ }
+}
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    if (typeof data.step === 'number' && Array.isArray(data.answers)) return data;
+    return null;
+  } catch (e) { return null; }
+}
+function clearProgress() {
+  try { localStorage.removeItem(STORE_KEY); } catch (e) { /* noop */ }
+}
+
+let audioEl = null, playing = false;
+const musicBtn = document.getElementById('musicBtn');
+const ICON_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+const ICON_PAUSE = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>';
+function setupAudio() {
+  if (!CONFIG.audio) return;
+  audioEl = new Audio(CONFIG.audio);
+  audioEl.loop = true;
+  audioEl.volume = 0.4;
+  musicBtn.hidden = false;
+  musicBtn.innerHTML = ICON_PLAY;
+  musicBtn.onclick = () => {
+    if (playing) { audioEl.pause(); musicBtn.innerHTML = ICON_PLAY; }
+    else { audioEl.play().catch(()=>{}); musicBtn.innerHTML = ICON_PAUSE; }
+    playing = !playing;
+  };
+}
+
+function buildChain() {
+  chainEl.innerHTML = '';
+  for (let i = 0; i < QUESTIONS.length; i++) {
+    const l = document.createElement('div');
+    l.className = 'link';
+    chainEl.appendChild(l);
+  }
+}
+function updateChain() {
+  [...chainEl.children].forEach((l, i) => l.classList.toggle('broken', i < step));
+}
+
+function renderIntro() {
+  chainEl.hidden = true;
+  const fotos = CONFIG.fotosInicio.map((src, i) => src
+    ? `<div class="ph" style="background-image:url('${src}')"></div>`
+    : `<div class="ph">FOTO ${i + 1}</div>`).join('');
+
+  const crest = CONFIG.logoAC
+    ? `<img class="crest-img" src="${CONFIG.logoAC}" alt="Acción Católica"
+          onerror="this.outerHTML='&lt;svg class=&quot;crest&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;%23E8C04B&quot; stroke-width=&quot;1.4&quot;&gt;&lt;path d=&quot;M12 2 4 6v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10V6l-8-4Z&quot;/&gt;&lt;path d=&quot;M12 7v9M8.5 11h7&quot; stroke-linecap=&quot;round&quot;/&gt;&lt;/svg&gt;'" />`
+    : `<svg class="crest" viewBox="0 0 24 24" fill="none" stroke="#E8C04B" stroke-width="1.4">
+         <path d="M12 2 4 6v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10V6l-8-4Z"/>
+         <path d="M12 7v9M8.5 11h7" stroke-linecap="round"/>
+       </svg>`;
+
+  const resumeBlock = resumeAvailable
+    ? `<button class="btn btn-primary" id="resume">Continuar test</button>
+       <button class="back" id="fresh" style="margin-top:14px;">Empezar de nuevo</button>`
+    : `<button class="btn btn-primary" id="start">Empezar</button>`;
+
+  app.innerHTML = `
+    <div class="card intro">
+      ${crest}
+      <p class="eyebrow">Jóvenes de Acción Católica Mercedaria</p>
+      <h1>¿Cuál es tu<br>ministerio?</h1>
+      <p class="sub">Responde unas preguntas y descubre en qué ministerio del grupo encaja mejor tu forma de servir.</p>
+      <div class="photo-strip">${fotos}</div>
+      <p class="lema">"Libres para liberar"</p>
+      ${resumeBlock}
+    </div>`;
+
+  const startBtn = document.getElementById('start');
+  if (startBtn) startBtn.onclick = beginTest;
+
+  const resumeBtn = document.getElementById('resume');
+  if (resumeBtn) resumeBtn.onclick = () => {
+    const data = loadProgress();
+    if (data) { step = data.step; scores = data.scores; answers = data.answers; }
+    startMusic();
+    render();
+  };
+
+  const freshBtn = document.getElementById('fresh');
+  if (freshBtn) freshBtn.onclick = () => {
+    clearProgress();
+    resumeAvailable = false;
+    scores = { p:0, f:0, l:0, m:0, n:0 };
+    answers = [];
+    beginTest();
+  };
+}
+
+function beginTest() {
+  startMusic();
+  step = 0;
+  saveProgress();
+  render();
+}
+function startMusic() {
+  if (audioEl && !playing) { audioEl.play().catch(()=>{}); playing = true; musicBtn.innerHTML = ICON_PAUSE; }
+}
+
+function renderQuestion() {
+  chainEl.hidden = false;
+  updateChain();
+  const item = QUESTIONS[step];
+  app.innerHTML = `
+    <div class="card">
+      <p class="qcount">Pregunta ${step + 1} de ${QUESTIONS.length}</p>
+      <h2 class="question">${item.q}</h2>
+      <div class="options">
+        ${item.opts.map((o, i) => `<button class="opt" data-i="${i}">${o.t}</button>`).join('')}
+      </div>
+      <button class="back" ${step === 0 ? 'hidden' : ''}>← Atrás</button>
+    </div>`;
+  app.querySelectorAll('.opt').forEach(btn => {
+    btn.onclick = () => choose(parseInt(btn.dataset.i, 10));
+  });
+  const back = app.querySelector('.back');
+  if (back) back.onclick = () => { step--; saveProgress(); render(); };
+}
+
+function choose(i) {
+  if (answers[step] != null) applyScore(QUESTIONS[step].opts[answers[step]].s, -1);
+  answers[step] = i;
+  applyScore(QUESTIONS[step].opts[i].s, +1);
+  step++;
+  saveProgress();
+  render();
+}
+function applyScore(s, sign) { for (const k in s) scores[k] += s[k] * sign; }
+
+function winner() {
+  const best = Object.keys(scores).reduce((a, b) => scores[b] > scores[a] ? b : a);
+  const second = Object.keys(scores).filter(k => k !== best)
+    .reduce((a, b) => scores[b] > scores[a] ? b : a);
+  return { best, second };
+}
+
+function renderResult() {
+  chainEl.hidden = false;
+  step = QUESTIONS.length;
+  updateChain();
+  clearProgress();         // test completo: ya no hay nada que retomar
+  const { best, second } = winner();
+  const key = KEYMAP[best];
+  const m = MINISTERIOS[key];
+  const m2 = MINISTERIOS[KEYMAP[second]];
+  const foto = CONFIG.fotosMinisterio[key];
+  const fotoBlock = foto
+    ? `<div class="result-photo" style="background-image:url('${foto}')"></div>`
+    : `<div class="result-photo">FOTO DE ${m.nombre.toUpperCase()}</div>`;
+
+  app.innerHTML = `
+    <div class="card result">
+      <div class="sello">
+        <svg viewBox="0 0 24 24" fill="#E8C04B"><path d="${m.icon}"/></svg>
+      </div>
+      <p class="ledein">TU MINISTERIO ES</p>
+      <h2>${m.nombre}</h2>
+      ${fotoBlock}
+      <p class="mision">${m.mision}</p>
+      <div class="porque">${m.porque}</div>
+      <p class="segundo">También encajarías en <b>${m2.nombre}</b>.</p>
+      <div class="actions">
+        <button class="btn btn-primary" id="share">Compartir resultado</button>
+        <button class="btn btn-ghost" id="again">Hacer el test otra vez</button>
+      </div>
+      <p class="coord">Esto es solo una orientación — el último paso es el discernimiento personal y conversarlo con la coordinación.<br>
+      Coordina <b>${m.nombre}</b>: ${m.coord}.</p>
+    </div>`;
+
+  document.getElementById('again').onclick = reset;
+  document.getElementById('share').onclick = () => share(m);
+}
+
+function share(m) {
+  const text = `Hice el test de JACM y mi ministerio es ${m.nombre}. "Libres para liberar". Descubre el tuyo:`;
+  const url = location.href;
+  if (navigator.share) {
+    navigator.share({ title: '¿Cuál es tu ministerio? · JACM', text, url }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(`${text} ${url}`).then(showToast).catch(showToast);
+  }
+}
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1900);
+}
+
+function reset() {
+  clearProgress();
+  resumeAvailable = false;
+  step = -1;
+  scores = { p:0, f:0, l:0, m:0, n:0 };
+  answers = [];
+  render();
+}
+
+function render() {
+  if (step === -1) renderIntro();
+  else if (step < QUESTIONS.length) renderQuestion();
+  else renderResult();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+setupAudio();
+buildChain();
+// ¿hay un test a medias guardado?
+const saved = loadProgress();
+if (saved && saved.step > 0 && saved.step < QUESTIONS.length) {
+  resumeAvailable = true;
+}
+render();
+</script>
