@@ -225,21 +225,27 @@
 <script>
 const CONFIG = {
   // Audio de fondo (.mp3/.ogg). Deja "" para ocultar el botón de música.
+  // (Spotify NO sirve para música de fondo; debe ser un archivo de audio alojado.)
   audio: "",
-
+ 
   // Logo de Acción Católica (aparece en el inicio). Deja "" para usar el escudo dibujado.
   logoAC: "https://raw.githubusercontent.com/VKneider/jac-birthday-card/master/logo%20ac.png",
-
+ 
   // 3 fotos del grupo para el inicio (cuadradas se ven mejor).
-  fotosInicio: ["", "", ""],
-
+  fotosInicio: [
+    "https://raw.githubusercontent.com/VKneider/jacm-quiz/main/images/group1.jpg",
+    "https://raw.githubusercontent.com/VKneider/jacm-quiz/main/images/group2.jpg",
+    "https://raw.githubusercontent.com/VKneider/jacm-quiz/main/images/group3.jpg"
+  ],
+ 
   // 1 foto por ministerio para la pantalla de resultado.
+  // (Falta subir musica.jpg; al subirla aparecerá automáticamente.)
   fotosMinisterio: {
-    promocion: "",
-    formacion: "",
-    liturgia:  "",
-    musica:    "",
-    finanzas:  ""
+    promocion: "https://raw.githubusercontent.com/VKneider/jacm-quiz/main/images/ministerios/promocion.jpg",
+    formacion: "https://raw.githubusercontent.com/VKneider/jacm-quiz/main/images/ministerios/formacion.jpg",
+    liturgia:  "https://raw.githubusercontent.com/VKneider/jacm-quiz/main/images/ministerios/liturgia.jpg",
+    musica:    "https://raw.githubusercontent.com/VKneider/jacm-quiz/main/images/ministerios/musica.png",
+    finanzas:  "https://raw.githubusercontent.com/VKneider/jacm-quiz/main/images/ministerios/finanzas.jpg"
   }
 };
 </script>
